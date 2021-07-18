@@ -296,7 +296,7 @@ model.add(Dense(3, activation='softmax'))
 opt=keras.optimizers.Adam(learning_rate=0.01)
 model.compile(loss='sparse_categorical_crossentropy',optimizer=opt,metrics=['accuracy'])
 
-es = EarlyStopping(monitor='val_loss',mode='min',verbose=1,patience=5)
+es = EarlyStopping(monitor='val_loss',mode='min',verbose=1,patience=5,restore_best_weights=True)
 
 history=model.fit(x_train,y_train, epochs=2000,batch_size=10, verbose=2, validation_data=(x_test,y_test), callbacks=[es,mc])
 
