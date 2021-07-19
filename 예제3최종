@@ -1,0 +1,371 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# **실습3**
+# ### **winequality_red 데이터를 이용한 <span style="color:darkgreen">AI분류</span> 문제**
+# ---
+
+# #### 와인의 성분 데이터를 이용하여 와인 등급을 분류하는 AI 문제입니다.
+# #### AI코딩 단계에 따라 주어지는 문제를 읽고 답안을 작성하세요.
+#  - 데이터 : 분류(카테고리)
+#  - 모델 : RandomForest(머신러닝 모델 비교 분석 추가), DeepLearning
+#  - 주요 전처리 : 분석 Column 추가, 정규화(normalization), label 전처리(카테고리 → 수치화)
+#  - 주요 학습 내용 : 산점도, 분류 모델 생성(분류방법, input, output 처리, 손실함수 등), 머신러닝 모델 비교학습(리스트 활용)
+# ---
+# 
+# 
+# 
+# 
+
+# **winequality_red.csv / 에이드 판매 데이터 컬럼 설명**
+# - fixed acidity : 고정산 농도
+# - volatile acidity : 휘발산 농도
+# - citric acid : 구연산 농도
+# - residual sugar : 잔류 당분 농도
+# - chlorides : 염화물 농도
+# - free sulfur dioxide : 유리 아황산 농도
+# - total sulfur dioxide : 총 아황산 노도
+# - density : 밀도
+# - pH : pH, 수소이온농도지수
+# - sulphates : 황산염 농도
+# - alcohol : 알코올 도수
+# - quality : 와인 등급 0 ~ 10, integer
+#     * 현재 데이터는 3,4,5,6,7,8 만 있다.
+
+# ---
+# > **<span style="color:red">다음 문항을 풀기 전에 </span>아래 코드를 실행해주시기 바랍니다.**<br>
+# > - AIDU 사용을 위한 AIDU 환경변수를 선언을 하는 코드. <span style="color:darkgreen"></span><br>
+# ---
+
+# In[1]:
+
+
+
+# AIDU 내부 연동을 위한 라이브러리
+from aicentro.session import Session
+from aicentro.framework.keras import Keras as AiduFrm
+# AIDU와 연동을 위한 변수
+aidu_session = Session(verify=False)
+aidu_framework = AiduFrm(session=aidu_session)
+
+
+# ### **Q1. Pandas를 pd로 alias하여 사용할 수 있도록 불러오는 코드를 작성하고 실행하시기 바랍니다.**
+# ---
+
+# In[1]:
+
+
+
+import pandas as pd
+
+
+# ### **Q2.Matplotlib의 pyplot을 plt로 alias하여 사용할 수 있도록 불러오는 코드를 작성하고 실행하시기 바랍니다.**
+# ---
+
+# In[2]:
+
+
+import matplotlib.pyplot as plt
+
+
+# ### **Q3.winequality_red.csv를 판다스 데이터 프레임으로 불러와서 wine에 선언하는 코드를 작성하고 실행하시기 바랍니다.**
+# - 해당 csv는 string 형식으로 저장되어 있으며 ';' 기호로 항목을 분리해줘야 합니다.
+# ---
+
+# In[3]:
+
+
+# 여기에 답안코드를 작성하세요
+
+
+wine =pd.read_csv('winequality_red.csv',sep=';')
+
+
+# ### **Q4. 데이터 프레임 wine의 처음 5개 행을 조회하는 코드를 작성하고 데이터가 올바르게 불러와졌는지 확인하시기 바랍니다.**
+# ---
+
+# In[4]:
+
+
+# 여기에 답안코드를 작성하세요
+wine.head()
+
+
+# ### **Q5. 데이터 프레임 wine의 alcohol 컬럼을 히스토그램으로 시각화 하시기 바랍니다.**
+# 
+# * **
+# - 시각화를 위해 데이터를 10개 구간으로 나눈다.
+# ---
+
+# In[6]:
+
+
+# 여기에 답안코드를 작성하세요
+
+plt.figure()
+plt.hist(wine["alcohol"],bins=10)
+plt.show()
+
+
+# ### **Q6. 다음 조건에 맞추어 데이터 프레임 wine에 새로운 컬럼 rat_ca를 제작하시기 바랍니다.**
+# 
+# * **
+# - rat_ca 는 구연산 농도(citric acid를 알코올 도수(alcohol)로 나눈 값으로 정의한다.
+# ---
+
+# In[8]:
+
+
+wine['rat_ca'] = wine['citric acid'] / wine['alcohol']
+wine
+
+
+# ### **Q7. 데이터 프레임 wine의 컬럼 rat_ac를 x축, quality를 y축으로 하는 산점도를 시각화 하시기 바랍니다.**
+# 
+# ---
+
+# In[9]:
+
+
+plt.figure()
+plt.scatter(x = wine["rat_ca"],y = wine["quality"])
+plt.show()
+
+
+# ### **Q8. 다음 조건에 맞추어 데이터 프레임 wine에 새로운 컬럼 rat_r2a를 제작하시기 바랍니다.**
+# 
+# * **
+# - rat_r2a 는 잔류 당분 농도(residual sugar)의 제곱을 알코올 도수(alcohol)로 나눈 값으로 정의한다.
+# ---
+
+# In[11]:
+
+
+wine["rat_r2a"] = wine["residual sugar"] ** 2 / wine["alcohol"]
+wine
+
+
+# ### **Q9. 데이터 프레임 wine의 컬럼 rat_r2a를 x축으로 quality를 y축으로 하는 산점도를 시각화 하시기 바랍니다.**
+
+# In[13]:
+
+
+plt.figure()
+plt.scatter(x = wine["rat_r2a"],y = wine["quality"])
+plt.show()
+
+
+# ### **Q10. 다음 조건에 맞추어 데이터 프레임 wine에 새로운 컬럼 rat_cta를 제작하시기 바랍니다.**
+# 
+# * **
+# - rat_cta 는 구연산 농도를 (구연산+고정산+휘발산)농도로 나눈 값으로 정의한다.
+# - 구연산 : citric acid, 휘발산 : volatile acidity, 고정산 : fixed activity
+# ---
+
+# In[14]:
+
+
+wine ["rat_cta"] = wine["citric acid"] / (wine["citric acid"] + wine["volatile acidity"] + wine["fixed acidity"])
+
+
+# ### **Q11. 데이터 프레임 wine의 컬럼 rat_cta를 x축으로 컬럼 quality를 y축으로 하는 산점도를 시각화 하시기 바랍니다.**
+# 
+# * **
+# - plot에 grid(격자 표시)를 추가하시오.
+# ---
+
+# In[15]:
+
+
+plt.figure()
+plt.scatter(x = wine["rat_cta"],y = wine["quality"])
+plt.grid()
+plt.show()
+
+
+# ### **Q12. 데이터 프레임 wine의 컬럼 density와 pH를 표준화(standardization) 하시기 바랍니다**
+# 
+# ---
+
+# In[27]:
+
+
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+wine[['density','pH']] = scaler.fit_transform(wine[['density','pH']])
+
+
+# ### **Q13. 데이터를 트레이닝셋 / 테스트셋으로 분할하시기 바랍니다.**
+# * **
+# - y는 wine데이터 프레임의 quality컬럼이다. x는 그 나머지 컬럼들이다.
+# - train : test = 9 : 1
+# - y의 클래스가 골고루 분할되도록 stratify하게 분할한다.
+# - 변수명 규칙은 다음과 같다.
+#     * x_train, y_train
+#     * x_test, y_test
+# - random state, seed 등은 2021로 설정한다.
+# ---
+
+# In[28]:
+
+
+from sklearn.model_selection import train_test_split
+x = wine.drop('quality',axis = 1).values
+y = wine['quality'].values
+x_train, x_test, y_train,y_test = train_test_split(x, y,  test_size = 0.1, stratify = y, random_state = 2021 )
+
+
+# ### **Q14. 트레이닝 데이터를 트레이닝셋 / 벨리데이션셋으로 분할하시기 바랍니다.**
+# * **
+# - x_train, y_train을 이용한다.
+# - train : validation = 8 : 1
+# - y_train의 클래스가 골고루 분할되도록 stratify하게 분할한다.
+# - 변수명 규칙은 다음과 같다.
+#     * x_train, y_train
+#     * x_valid, y_valid
+# - random state, seed 등은 2021로 설정한다.
+# ---
+
+# In[29]:
+
+
+
+x_train, x_valid, y_train,y_valid = train_test_split(x_train, y_train,  test_size = 1/9, stratify = y_train, random_state = 2021 )
+
+
+# ### **Q15. RandomForest 모델들을 학습시키시기 바랍니다.**
+# * **
+# - RandomForestClassifier 하이퍼파라미터 설정 :  n_estimators=나무의 개수, max_depth=13(각 Tree의 max depth),min_samples_leaf=5(한개의 node에 최소의 데이터 개수, 5개면 tree depth를 늘리지 않음) random_state=30
+# - 와인의 퀄리티를 '분류'모델링 한다.
+# - 트레이닝 셋 (x_train, y_train)을 이용하여 학습시킨다.
+# - 나무의 개수를 1에서 50까지 늘려가며 학습한다.
+# - 학습시킨 랜덤포레스트들은 리스트를 만들어 forests 변수에 담아둔다.
+# - seed나 random_state는 2021로 고정한다.
+# ---
+
+# In[30]:
+
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+forests = []
+for i in range(1,51):
+    rfc=RandomForestClassifier(n_estimators=i, max_depth=13,min_samples_leaf = 5, random_state =2021)
+    forests.append(rfc.fit(x_train, y_train))
+
+
+# ### **Q16. RandomForest 모델들의 성능을 리스트에 담아 accs에 선언하시기 바랍니다.**
+# * **
+# - 위에 저장한 randomforest 값들을 불러온다.(forest list를 활용한다. forests[i] 형태)
+# - for 문 함수를 사용하여, 각 모델에 대한 valid set에 대한 acc를 확인한다.(score 함수 활용)
+# - 벨리데이션 셋 위에서 성능을 평가한다.
+# - append를 통해 accs list의 값에 계속 해당 성능 값을 추가한다.
+# ---
+
+# In[31]:
+
+
+accs = []
+for i in range(50):
+    pred = forests[i].predict(x_valid)
+    acc = accuracy_score(pred, y_valid)
+    print("정확도: ", acc)
+    accs.append(acc)
+
+
+# ### **Q17. RandomForest의 Tree 개수에 따른 accuracy를 시각화하시기 바랍니다.**
+# * **
+# - 위의 Q17에서 제작한 리스트 accs를 이용한다.
+# - line plot을 이용하여 각 모델 별 accuracy를 출력한다.
+# - 동일 성능의 gamma가 여러개라면 가장 작은걸 택한다.
+# ---
+
+# In[32]:
+
+
+plt.figure()
+plt.plot(accs)
+plt.grid()
+plt.show()
+
+
+# > **<span style="color:red">다음 문항을 풀기 전에 </span>아래 코드를 실행하세요.**
+# >
+
+# In[33]:
+
+
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras.layers import Input, Dense, BatchNormalization
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.callbacks import EarlyStopping
+
+
+# ### **Q17. 아래 조건에 맞추어 뉴럴네트워크 모델을 학습시키시기 바랍니다.**
+# * **
+# - Tensorflow framework를 사용한다.
+# - 히든레이어는 아래와 같은 규칙에 맞추어 구성합니다.
+#     * 2개의 fully connected layer를 사용할 것, 노드는 인풋레이어 노드의 2이상으로 한다.
+# - Early stopping을 이용하여, validation loss가 50번 이상 개선되지 않으면 학습을 중단 시키고, 가장 성능이 좋았을 때의 가중치를 복구한다.
+# - 학습과정의 로그(loss, accuracy)를 history에 선언하여 남긴다.
+# - y를 별도로 원핫인코딩 하지 않고 분류모델을 학습시킬 수 있도록 한다.
+#     * 데이터에 없는 클래스까지 고려하여, 아웃풋레이어의 노드를 10개로 지정한다.
+# - epochs는 2000번을 지정한다.
+# ---
+
+# In[35]:
+
+
+import os
+from keras.optimizers import Adam
+#from keras.optimizer_v2.adam import Adam
+from tensorflow.keras.callbacks import ModelCheckpoint
+
+model = Sequential()
+
+
+model.add(Dense(16, activation='relu', input_shape=(2,14)))
+model.add(Dense(64, activation='relu'))
+model.add(Dense(10, activation = 'softmax'))
+
+#model.compile(loss='binary_crossentropy', optimizer='Adam', metrics=['acc'])
+model.compile(loss='SparseCategoricalCrossentropy', optimizer='Adam', metrics=['acc'])
+#SparseCategoricalCrossentropy
+es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=50,restore_best_weights=True )
+
+
+history = model.fit(x_train, y_train, epochs=2000,  
+
+                  verbose=2, validation_split=0.3,   
+
+                 callbacks=[es])
+
+
+# ### **Q20. 다음 조건에 맞추어 뉴럴네트워크의 학습 로그를 시각화 하시오.**
+# * **
+# - 필요한 라이브러리가 있다면 따로 불러온다.
+# - epochs에 따른 accuracy의 변화를 시각화 한다.
+# - train accuracy와 validation accuracy를 전부 시각화하고, 구별가능해야 한다.
+# - 그래프의 타이틀은 'Accuracy'로 표시한다.
+# - x축에는 'epochs'라고 표시하고 y축에는 'accuracy'라고 표시한다.
+# ---
+
+# In[37]:
+
+
+h = history
+plt.plot(h.history['acc'])
+plt.plot(h.history['val_acc'])
+plt.title('Accuracy')
+plt.xlabel('epochs')
+plt.ylabel("accuracy")
+plt.legend(['loss', 'val_loss'])
+plt.show()
+
+
+# In[ ]:
+
+
+
+
