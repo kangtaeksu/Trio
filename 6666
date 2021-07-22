@@ -32,3 +32,9 @@ scaler = StandardScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 ------------------------------
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
+rfc=RandomForestClassifier(n_estimators=100, max_features=9, max_depth=5, random_state =42)
+rfc.fit(x_train, y_train)
+-------------
