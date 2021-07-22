@@ -7,3 +7,11 @@ df['고객Care그룹'].replace(np.nan,'', inplace=True)
 
 
 pd.get_dummies(df, columns = ['일자','VOC 유형 1레벨','VOC 유형 2레벨','VOC 유형 3레벨','VOC 유형 4레벨','상품명','주소','연령','요금납부방법','약정만료여부','프로모션 정보','상품변경여부'])
+
+
+# 여기에 답안코드를 작성하세요
+
+from sklearn.model_selection import train_test_split
+X =df.drop('상품변경여부',axis = 1).values
+y= df['상품변경여부'].values
+x_train,x_test, y_train, y_test = train_test_split(X, y, test_size=0.2,random_state=2021, stratify=y)
