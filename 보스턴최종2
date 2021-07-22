@@ -1,0 +1,47 @@
+# import
+import pandas as pd
+
+# Series 객체 만들기
+data = ['2016', '2017', '2018', '2019']
+result = pd.Series(data)
+print(result)
+
+print("##############################")
+print(result.index) # 모든 index값 출력
+print(result.values) # 모든 데이터값 출력
+
+# Series 객체 이름 지정하기(이름 기반 데이터 이해)
+print("##############################")
+result.name = 'Year'
+print(result)
+
+# Series 객체의 인덱스명 지정
+print("##############################")
+result.index.name = 'No'
+print(result)
+
+# index 지정해 Series 객체 생성
+print("##############################")
+data = ['2016', '2017', '2018', '2019']
+result = pd.Series(data, index=['a','b','c','d'])
+print(result)
+print(result.index)
+
+# dictionary 이용해 Series 객체 생성하기, Key가 Index 되고 Value가 값이 된다.
+print("##############################")
+score = {'Kim' : 85, 'Hwang' : 100, 'Lee' : 99, 'Choi' : 80}
+result = pd.Series(score)
+print(result)
+print(result.index)
+print(result.values)
+
+# Series 내 Value 값 접근하기(Index)
+print("##############################")
+print(result['Lee'])
+print(result['Hwang'])
+
+# 연산 진행하기
+print("##############################")
+data = pd.Series([1, -1, 3, 5])
+print(data)
+print(data+100)
