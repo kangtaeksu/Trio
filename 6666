@@ -87,4 +87,9 @@ plt.title('Accuracy')
 plt.xlabel('Epochs')
 plt.ylabel("Acc")
 plt.show()
+------
+from sklearn.metrics import confusion_matrix
+y_pred=forest.predict(x_test)
+cf = confusion_matrix(y_test,y_pred)
+sns.heatmap(cf,annot=True)
 
