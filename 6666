@@ -6,4 +6,8 @@ df['약정만료여부']
 #df['프로모션 정보']
 df['프로모션 정보'].replace(' ',np.nan, inplace=True)
 df['고객Care그룹'].replace('0',np.nan, inplace=True)
-df['고객Care그룹'].replace(' ',np.nan, inplace=True)
+df['고객Care그룹'].replace(' ',np.nan, inplace=True)'
+
+
+
+pd.get_dummies(df, columns = ['일자','VOC 유형 1레벨','VOC 유형 2레벨','VOC 유형 3레벨','VOC 유형 4레벨','상품명','주소','연령','요금납부방법','약정만료여부','프로모션 정보','상품변경여부'])
