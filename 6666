@@ -15,3 +15,11 @@ from sklearn.model_selection import train_test_split
 X =df.drop('상품변경여부',axis = 1).values
 y= df['상품변경여부'].values
 x_train,x_test, y_train, y_test = train_test_split(X, y, test_size=0.2,random_state=2021, stratify=y)
+
+
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
+rfc=RandomForestClassifier(n_estimators=100, max_depth=5, random_state =42)
+rfc.fit(x_train, y_train)
