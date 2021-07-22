@@ -1,7 +1,0 @@
-from skleran.preprocessing import LabelEncoder
-le = LabelEncoder()
-df['신규가입일자']=le.fit_transform(df['신규가입일자'])
-df['연계상품 여부']=le.fit_transform(df['연계상품 여부'])
-df['프로모션 정보']=le.fit_transform(df['프로모션 정보'])
-df['상품변경여부']=le.fit_transform(df['상품변경여부'])
-df.drp('일자',axis=1)
