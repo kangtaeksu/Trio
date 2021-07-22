@@ -37,4 +37,54 @@ from sklearn.metrics import accuracy_score
 
 rfc=RandomForestClassifier(n_estimators=100, max_features=9, max_depth=5, random_state =42)
 rfc.fit(x_train, y_train)
--------------
+-------------'
+
+
+13
+# 여기에 답안코드를 작성하세요
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras.layers import Input, Dense
+from tensorflow.keras.models import Sequential, Model
+from tensorflow.keras.callbacks import ModelCheckpoint
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import EarlyStopping
+model = Sequential()
+
+model.add(Dense(64, activation='relu', input_shape=(97,)))
+model.add(Dropout(0.3))
+model.add(Dense(64, activation='relu'))
+model.add(Dense(64, activation='relu'))
+model.add(Dense(64, activation='relu'))
+model.add(Dense(1, activation = 'sigmoid'))
+
+
+model.compile(loss='binary_crossentropy', optimizer='Adam', metrics=['acc'])
+
+
+modelpath = "best_model.h5"
+checkpointer = ModelCheckpoint( filepath=modelpath, monitor='val_loss', verbose=1,save_best_only=True)
+es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=10 )
+
+history = model.fit(x_valid, y_valid, epochs=100, validation_split=0.2, callbacks=[es, checkpointer])
+model.load_weights(modelpath)
+
+
+==
+
+14
+# 여기에 답안코드를 작성하세요
+
+
+h = history
+plt.plot(h.history['acc'])
+
+plt.plot(h.history['val_acc'])
+plt.plot(h.history['loss'])
+plt.plot(h.history['val_loss'])
+plt.legend(['acc','val_acc','loss','val_loss'])
+plt.title('Accuracy')
+plt.xlabel('Epochs')
+plt.ylabel("Acc")
+plt.show()
+
