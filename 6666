@@ -1,0 +1,9 @@
+# 여기에 답안코드를 작성하세요
+
+df.isnull().sum()
+df['약정만료여부']
+#df['고객Care그룹']
+#df['프로모션 정보']
+df['프로모션 정보'].replace(' ',np.nan, inplace=True)
+df['고객Care그룹'].replace('0',np.nan, inplace=True)
+df['고객Care그룹'].replace(' ',np.nan, inplace=True)
