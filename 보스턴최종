@@ -364,7 +364,7 @@ checkpointer = ModelCheckpoint( filepath=modelpath, monitor='val_loss', verbose=
                                save_best_only=True)
 
 history = model.fit(x_valid, y_valid, epochs=200, validation_split=0.2, callbacks=checkpointer)
-
+model.load_weights(modelpath)
 
 # ### **Q17. 다음 조건에 맞추어 뉴럴네트워크의 학습 로그를 시각화 하시기 바랍니다.**
 # * **
